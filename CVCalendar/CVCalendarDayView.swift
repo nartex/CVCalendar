@@ -155,11 +155,10 @@ extension CVCalendarDayView {
         let appearance = calendarView.appearance
         
         dayLabel = UILabel()
-        let numberFormatter = NumberFormatter()
-        if let locale = calendarView.delegate?.calendar?()?.locale {
-            numberFormatter.locale = locale
+        dayLabel?.text = String(date.day)
+        if let convertedDate = date.convertedDate() {
+            dayLabel?.accessibilityLabel = DateFormatter.localizedString(from: convertedDate, dateStyle: .full, timeStyle: .none)
         }
-        dayLabel?.text = numberFormatter.string(from: NSNumber.init(value: date.day))
         dayLabel?.textAlignment = NSTextAlignment.center
         dayLabel?.frame = bounds
         
