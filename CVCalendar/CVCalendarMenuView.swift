@@ -20,8 +20,7 @@ public final class CVCalendarMenuView: UIView {
     public var dayOfWeekTextUppercase: Bool? = true
     public var dayOfWeekFont: UIFont? = UIFont(name: "Avenir", size: 10)
     public var weekdaySymbolType: WeekdaySymbolType? = .short
-    public var calendar: Calendar? = Calendar.current
-    
+
     @IBOutlet public weak var menuViewDelegate: AnyObject? {
         set {
             if let delegate = newValue as? MenuViewDelegate {
@@ -66,17 +65,16 @@ public final class CVCalendarMenuView: UIView {
     }
 
     public func setupWeekdaySymbols() {
-        if var calendar = self.calendar {
-            (calendar as NSCalendar).components([NSCalendar.Unit.month, NSCalendar.Unit.day], from: Foundation.Date())
-            calendar.firstWeekday = firstWeekday!.rawValue
-            symbols = calendar.weekdaySymbols
-        }
+        var calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        (calendar as NSCalendar).components([NSCalendar.Unit.month, NSCalendar.Unit.day], from: Foundation.Date())
+        calendar.firstWeekday = firstWeekday!.rawValue
+
+        symbols = calendar.weekdaySymbols
     }
 
     public func createDaySymbols() {
         // Change symbols with their places if needed.
         let dateFormatter = DateFormatter()
-        dateFormatter.locale = calendar?.locale ?? Locale.current
         var weekdays: NSArray
 
         switch weekdaySymbolType! {
@@ -114,7 +112,8 @@ public final class CVCalendarMenuView: UIView {
             let symbol = UILabel(frame: CGRect(x: x, y: y, width: width, height: height))
             symbol.textAlignment = .center
             symbol.text = self.symbols[i]
-
+            symbol.accessibilityElementsHidden = true
+            
             if dayOfWeekTextUppercase! {
                 symbol.text = (self.symbols[i]).uppercased()
             }
